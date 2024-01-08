@@ -13,5 +13,5 @@ def show():
     st.write("- Email Generator: Automatically generate initial emails for our data users. Provide an Excel file with the users' emails and the reason for the initial email correspondence.")
     st.write("-----")
     st.write("### **Get Started**: Use the sidebar to navigate through different sections and visualizations.")
-    st.write("Source code: **ADD LINK HERE**")
+    st.write("Source code: **https://github.com/dillon-shearer/streamlit**")
     
