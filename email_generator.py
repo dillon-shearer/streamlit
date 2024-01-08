@@ -118,7 +118,7 @@ def show():
         st.write('6. **Verify PI/BO** <br> *Used when you need to verify the user\'s PI **and** Business Official information.*', unsafe_allow_html=True)
         st.write('7. **Verify extra collaborators** <br> *Used when you need to verify that the user does not have any additional collaborators.*', unsafe_allow_html=True)
         st.write('8. **Expired docusign** <br> *Used when the user\'s DocuSign has voided.*', unsafe_allow_html=True)
-        st.write('9. **DAC approved, need signatures** <br> *Used the user\'s request is Approved by the DAC, and they only need to sign the DUA to gain approval.*', unsafe_allow_html=True)
+        st.write('9. **DAC approved, need signatures** <br> *Used when the user\'s request is Approved by the DAC, and they only need to sign the DUA to gain approval.*', unsafe_allow_html=True)
     
     st.write("#### Run Script Here")
 
