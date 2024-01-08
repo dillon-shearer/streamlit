@@ -93,7 +93,7 @@ def show():
 
     # Button Creation
     # Path to your file
-    file_path = 'streamlit/data/email_template.xlsx'
+    file_path = '/mount/src/streamlit/data/email_template.xlsx'
 
     # Open the file in binary mode
     with open(file_path, "rb") as file:
