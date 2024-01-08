@@ -14,4 +14,7 @@ def show():
     st.write("-----")
     st.write("### **Get Started**: Use the sidebar to navigate through different sections and visualizations.")
     st.write("Source code: **ADD LINK HERE**")
+
+    import os
+    st.write("Current working directory:", os.getcwd())
     
