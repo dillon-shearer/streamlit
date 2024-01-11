@@ -123,14 +123,9 @@ def show():
             today = datetime.today()
             formatted_date = today.strftime('%Y%m%d')
 
-            # Only show the download button if excel_file is not None
-            if excel_file is not None:
-                st.download_button(
-                    label="Download Excel file",
-                    data=excel_file,
-                    file_name=f'azure_{environment}_Data_{formatted_date}.xlsx',
-                    mime="application/vnd.ms-excel"
-                )
-
-        except Exception as e:
-                pass  # Silently handle any exception
+            st.download_button(
+                label="Download Excel file",
+                data=excel_file,
+                file_name=f'azure_{environment}_Data_{formatted_date}.xlsx',
+                mime="application/vnd.ms-excel"
+            )
