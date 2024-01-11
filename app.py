@@ -1,6 +1,7 @@
 import streamlit as st
 import home
 import email_generator
+import staging_released_script
 
 
 # Set page configuration
@@ -44,7 +45,7 @@ st.markdown("""
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-choice = st.sidebar.radio("Go to", ["Home", "Email Generator"])
+choice = st.sidebar.radio("Go to", ["Home", "Email Generator", "Get Azure Staging/Released"])
 
 # Footer or additional information
 st.sidebar.markdown("---")
@@ -56,3 +57,5 @@ if __name__ == "__main__":
         home.show()
     elif choice == "Email Generator":
         email_generator.show()
+    elif choice == "Get Azure Staging/Released":
+        staging_released_script.show()
