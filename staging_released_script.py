@@ -89,14 +89,13 @@ def process_data(environment, connection_string):
             dataframes.append(df)
 
     # Check if the first two dataframes are not empty
-        if not (dataframes[0].empty or dataframes[1].empty):
-            output = io.BytesIO()
-            with pd.ExcelWriter(output, engine='xlsxwriter') as excel_writer:
-                # Write each DataFrame to a separate sheet
-                dataframes[0].to_excel(excel_writer, sheet_name='epigenomics', index=False)
-                dataframes[1].to_excel(excel_writer, sheet_name='proteomics', index=False)
-                dataframes[2].to_excel(excel_writer, sheet_name='transcriptomics', index=False)
-                dataframes[3].to_excel(excel_writer, sheet_name='genomics', index=False)
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as excel_writer:
+            # Write each DataFrame to a separate sheet
+            dataframes[0].to_excel(excel_writer, sheet_name='epigenomics', index=False)
+            dataframes[1].to_excel(excel_writer, sheet_name='proteomics', index=False)
+            dataframes[2].to_excel(excel_writer, sheet_name='transcriptomics', index=False)
+            dataframes[3].to_excel(excel_writer, sheet_name='genomics', index=False)
 
             # Save the Excel file
             excel_writer.save()
@@ -106,9 +105,6 @@ def process_data(environment, connection_string):
 
             # return file
             return output
-        
-        else:
-            pass
 
 # Main function for page
 def show():
