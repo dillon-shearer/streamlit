@@ -97,9 +97,6 @@ def process_data(environment, connection_string):
             dataframes[2].to_excel(excel_writer, sheet_name='transcriptomics', index=False)
             dataframes[3].to_excel(excel_writer, sheet_name='genomics', index=False)
 
-            # Save the Excel file
-            excel_writer.save()
-
             # Seek start of stream
             output.seek(0)
 
