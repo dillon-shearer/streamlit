@@ -133,4 +133,4 @@ def show():
                 )
 
         except Exception as e:
-                pass  # Silently handle any exception
+                st.write("An error occurred:", e)
