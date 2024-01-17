@@ -58,9 +58,6 @@ def process_data(environment, connection_string):
             dataframes[7].to_excel(excel_writer, sheet_name='staging-genomics', index=False)
             genomics.to_excel(excel_writer, sheet_name='combined-genomics', index=False)
 
-        # Save the Excel file
-        excel_writer.save()
-
         # Seek start of stream
         output.seek(0)
 
