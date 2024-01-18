@@ -2,7 +2,7 @@ import streamlit as st
 import home
 import email_generator
 import staging_released_script
-
+import dua_tracker
 
 # Set page configuration
 st.set_page_config(
@@ -45,7 +45,7 @@ st.markdown("""
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-choice = st.sidebar.radio("Go to", ["Home", "Email Generator", "Get Azure Staging/Released"])
+choice = st.sidebar.radio("Go to", ["Home", "Email Generator", "Get Azure Staging/Released", "DUA Tracker Script"])
 
 # Footer or additional information
 st.sidebar.markdown("---")
@@ -59,3 +59,5 @@ if __name__ == "__main__":
         email_generator.show()
     elif choice == "Get Azure Staging/Released":
         staging_released_script.show()
+    elif choice == "DUA Tracker Script":
+        dua_tracker.show()
