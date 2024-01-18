@@ -243,11 +243,12 @@ def update_tracker(users_fp_raw):
 # Main function for page
 def show():
     # Streamlit title
-    st.title("Update DUA Tracker Script")
-    st.write("This script updates the data for the DUA_Tracker_V2.xlsx file.")
+    st.title("Answer ALS Data Scripts: Update DUA Tracker Script")
+    st.write("*This script updates the data for the DUA_Tracker_V2.xlsx file.*")
+    st.write("------")
 
     # Instructions
-    with st.expander("Instructions for running script"):
+    with st.expander("**Instructions for running script**"):
         st.write('1. Download weekly cut (on Mondays) of users.csv from *Data Portal > Admin > User Management* where DUA Status = "**Submitted**".', unsafe_allow_html=True)
         st.write('2. Rename file as *YYYYMMDD users.csv*.', unsafe_allow_html=True)
         st.write('3. Convert CSV file to XLSX workbook. Save.', unsafe_allow_html=True)
@@ -258,7 +259,7 @@ def show():
         st.write('8. Update DUA Messages page (https://docs.google.com/document/d/1Pg9roju_zzynJxYD2aE6t-tPEG2Bqbiqi3nPy5MuCso/edit) with the newly generated messages.', unsafe_allow_html=True)
 
     # UI elements for input
-    users_fp_raw = st.text_input("Enter the URL to the GDrive stored XLSX workbook for this week's users.csv download: ", type="password")
+    users_fp_raw = st.text_input("Enter the URL to the GDrive stored XLSX workbook for this week's users.csv download: ")
     submit_button = st.button('Submit')
     st.write("")
 

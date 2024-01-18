@@ -103,8 +103,9 @@ def process_data(environment, connection_string):
 # Main function for page
 def show():
     # Streamlit title
-    st.title("Get Azure Staging/Released")
-    st.write("This script pulls participant IDs found in each Azure bucket.")
+    st.title("Answer ALS Data Scripts: Get Azure Staging/Released")
+    st.write("*This script pulls participant IDs found in each Azure bucket.*")
+    st.write("------")
 
     # UI elements for input
     connection_string = st.text_input("Enter the connection string", type="password")
