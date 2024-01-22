@@ -250,7 +250,7 @@ def show():
     # Instructions
     with st.expander("**Instructions for running script**"):
         st.write('1. Download weekly cut (on Mondays) of users.csv from *Data Portal > Admin > User Management* where DUA Status = "**Submitted**".', unsafe_allow_html=True)
-        st.write('2. Rename file as *YYYYMMDD users.csv*.', unsafe_allow_html=True)
+        st.write('2. Rename file as *users YYYYMMDD.csv*.', unsafe_allow_html=True)
         st.write('3. Convert CSV file to XLSX workbook. Save.', unsafe_allow_html=True)
         st.write('4. Drop the XLSX workbook into these folders in the GDrive (https://drive.google.com/drive/folders/1DhYmbNBhXzTqw_4ALt1vb7jQZluJJv8K)', unsafe_allow_html=True)
         st.write('5. Open the workbook in the Google Drive. Wait for the URL to settle after first opening (est. 5 seconds), and then copy that URL as-is.', unsafe_allow_html=True)
