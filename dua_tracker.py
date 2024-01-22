@@ -221,7 +221,7 @@ def update_tracker(users_fp_raw):
     new_users = new_users[~new_users['ID'].isin(completed_ids + completed_individual_ids)]
 
     # Filtering the DataFrame
-    df_filtered = df_new[~df_new['Id'].isin(new_users['ID'])]
+    df_filtered = df_new[~df_new['Id'].isin(new_users)]
 
     #Send updated Tracker to XLSX to replace current cut
     # Write to excel file
