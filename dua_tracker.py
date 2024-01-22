@@ -226,6 +226,9 @@ def update_tracker(users_fp_raw):
     # Filter out users who are in completed_individual_ids
     df_filtered = df_filtered[~df_filtered['Id'].isin(completed_individual_ids)]
 
+    # Set 'Status' column null values to 'Needs Action'
+    df_tracker['Status'].fillna('Needs Action', inplace=True)
+
     #Send updated Tracker to XLSX to replace current cut
     # Write to excel file
     output = io.BytesIO()
