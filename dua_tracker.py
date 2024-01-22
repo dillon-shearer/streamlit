@@ -216,14 +216,12 @@ def update_tracker(users_fp_raw):
     df_tracker.sort_values(by=['Date Added to Tracker', 'ID'], ascending=[True, True], inplace=True)
 
     # Message Creation
-    # Create a list of 'ID' values from the new_users DataFrame
-    individual_ids = df5['ID'].tolist()
 
     # Drop rows in new_users where 'ID' is in either of the two lists
     new_users = new_users[~new_users['ID'].isin(completed_ids + completed_individual_ids)]
 
     # Filtering the DataFrame
-    df_filtered = df_new[~df_new['Id'].isin(new_users)]
+    df_filtered = df_new[~df_new['Id'].isin(new_users['ID'])]
 
     #Send updated Tracker to XLSX to replace current cut
     # Write to excel file
