@@ -223,6 +223,8 @@ def update_tracker(users_fp_raw):
     # Filtering the DataFrame
     df_filtered = df_new[~df_new['Id'].isin(new_users)]
 
+    st.write(completed_individual_ids)
+
     #Send updated Tracker to XLSX to replace current cut
     # Write to excel file
     output = io.BytesIO()
