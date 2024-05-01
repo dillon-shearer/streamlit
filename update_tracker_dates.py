@@ -76,7 +76,7 @@ def show():
         merged_df = df_id.merge(users_df, on='ID', how='left')
 
         # Apply the function to extract the most recent collaborator signature date
-        merged_df['Last Collaborator Signature'] = merged_df['Email'].apply(extract_recent_collab_signature)
+        merged_df['Last Collaborator Signature'] = merged_df['Collaborators'].apply(extract_recent_collab_signature)
 
         st.write(merged_df)
 
