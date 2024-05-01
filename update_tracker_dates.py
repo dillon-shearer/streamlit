@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import numpy as np
 
 def show():
     # Function to read the Users.csv file
@@ -30,6 +31,24 @@ def show():
             df[column] = pd.to_datetime(df[column]).dt.strftime('%Y-%m-%d')
         return df
 
+    # Function to extract the most recent collaborator signature date
+    def extract_recent_collab_signature(cell):
+        if pd.isna(cell):
+            return "No collaborators"
+        
+        entries = cell.split(';')
+        sign_dates = []
+        for entry in entries:
+            if "Sign Status: Sent" in entry:
+                return np.nan
+            if "Sign Date:" in entry:
+                sign_date = entry.split(': ')[1].strip()
+                sign_dates.append(pd.to_datetime(sign_date))
+        
+        if sign_dates:
+            return max(sign_dates).strftime('%Y-%m-%d')
+        else:
+            return np.nan
 
     st.title("Users Data")
 
@@ -56,8 +75,11 @@ def show():
         # Merge df_id and users_df on the column 'ID', keeping all rows from users_df
         merged_df = df_id.merge(users_df, on='ID', how='left')
 
-        # Drop the 'ID' column from merged_df
-        merged_df = merged_df.drop(columns=['ID'])
+        # Apply the function to extract the most recent collaborator signature date
+        merged_df['Last Collaborator Signature'] = merged_df['Email'].apply(extract_recent_collab_signature)
+
+        # Drop the 'ID' and 'Email' columns from merged_df
+        merged_df = merged_df.drop(columns=['ID', 'Email'])
 
         # Define function for cleaning datetime values
         def clean_datetime(value):
