@@ -78,8 +78,10 @@ def show():
         # Apply the function to extract the most recent collaborator signature date
         merged_df['Last Collaborator Signature'] = merged_df['Email'].apply(extract_recent_collab_signature)
 
+        st.show(merged_df)
+
         # Drop the 'ID' and 'Email' columns from merged_df
-        merged_df = merged_df.drop(columns=['ID', 'Email'])
+        merged_df = merged_df.drop(columns=['ID'])
 
         # Define function for cleaning datetime values
         def clean_datetime(value):
