@@ -78,8 +78,6 @@ def show():
         # Apply the function to extract the most recent collaborator signature date
         merged_df['Last Collaborator Signature'] = merged_df['Collaborators'].apply(extract_recent_collab_signature)
 
-        st.write(merged_df)
-
         # Drop the 'ID' and 'Email' columns from merged_df
         merged_df = merged_df.drop(columns=['ID', 'Collaborators'])
 
@@ -96,4 +94,18 @@ def show():
         # Apply the clean_datetime function to all specified columns
         merged_df[columns_to_clean] = merged_df[columns_to_clean].applymap(clean_datetime)
 
+        # Get the list of current column names
+        columns = list(merged_df.columns)
+
+        # Index of the "Answer ALS Official Sign Date" column
+        index_of_als_date = columns.index('Answer ALS Official Sign Date')
+
+        # Remove 'Last Collaborator Signature' from its current position and insert it before 'Answer ALS Official Sign Date'
+        columns.remove('Last Collaborator Signature')
+        columns.insert(index_of_als_date, 'Last Collaborator Signature')
+
+        # Reorder the DataFrame with the new column order
+        merged_df = merged_df[columns]
+
+        # Now you can display the DataFrame to verify the new order
         st.write(merged_df)
