@@ -3,6 +3,8 @@ import streamlit as st
 import numpy as np
 
 def show():
+    st.title("Users Data")
+
     # Function to read the Users.csv file
     def read_users_csv(file_path):
         return pd.read_csv(file_path)
@@ -12,7 +14,7 @@ def show():
         # Read the Google Sheet
         df_sheet = pd.read_csv(sheet_url, encoding='UTF-8')
         # Extract the ID column
-        id_column = df_sheet['ID']
+        id_column = df_sheet[['ID']]
         return id_column
 
     # Function to merge data from Users.csv based on ID
@@ -31,27 +33,6 @@ def show():
             df[column] = pd.to_datetime(df[column]).dt.strftime('%Y-%m-%d')
         return df
 
-    # Function to extract the most recent collaborator signature date
-    def extract_recent_collab_signature(cell):
-        if pd.isna(cell):
-            return "No collaborators"
-        
-        entries = cell.split(';')
-        sign_dates = []
-        for entry in entries:
-            if "Sign Status: Sent" in entry:
-                return np.nan
-            if "Sign Date:" in entry:
-                sign_date = entry.split(': ')[1].strip()
-                sign_dates.append(pd.to_datetime(sign_date))
-        
-        if sign_dates:
-            return max(sign_dates).strftime('%Y-%m-%d')
-        else:
-            return np.nan
-
-    st.title("Users Data")
-
     # File upload for Users.csv
     users_csv_file = st.file_uploader("Upload Users.csv", type=["csv"])
 
@@ -61,51 +42,23 @@ def show():
 
         # Google Sheet URL
         sheet_url = "https://docs.google.com/spreadsheets/d/1JPi2raTk0cXK3X2fvVtsFiSXtbzX7lRU1btjjodn10w/export?format=csv&gid=1579761793"
-            
-        # Get data from Google Sheet
-        df = pd.read_csv(sheet_url, encoding='UTF-8')
-
-        df_id = df[['ID', 'Email']]
-
-        users_df = users_df[['Id', 'Verified Date', 'User Sign Date', 'Auth. Business Official Sign Date', 'Answer ALS Official Sign Date', 'Collaborators']]
         
+        # Get data from Google Sheet
+        df_id = get_google_sheet_data(sheet_url)
+
         # Rename the 'Id' column to 'ID' in the users_df DataFrame
         users_df.rename(columns={'Id': 'ID'}, inplace=True)
 
         # Merge df_id and users_df on the column 'ID', keeping all rows from users_df
-        merged_df = df_id.merge(users_df, on='ID', how='left')
+        merged_df = merge_data(users_df, df_id)
 
-        # Apply the function to extract the most recent collaborator signature date
-        merged_df['Last Collaborator Signature'] = merged_df['Collaborators'].apply(extract_recent_collab_signature)
+        # Apply function to format date columns
+        merged_df = format_dates(merged_df)
 
-        # Drop the 'ID' and 'Email' columns from merged_df
-        merged_df = merged_df.drop(columns=['ID', 'Collaborators'])
+        # Drop the 'ID' column from merged_df
+        merged_df.drop(columns=['ID'], inplace=True)
 
-        # Define function for cleaning datetime values
-        def clean_datetime(value):
-            if isinstance(value, str):
-                return value.split('T')[0]
-            else:
-                return value
-
-        # Columns to clean
-        columns_to_clean = ['Verified Date', 'User Sign Date', 'Auth. Business Official Sign Date', 'Answer ALS Official Sign Date']
-
-        # Apply the clean_datetime function to all specified columns
-        merged_df[columns_to_clean] = merged_df[columns_to_clean].applymap(clean_datetime)
-
-        # Get the list of current column names
-        columns = list(merged_df.columns)
-
-        # Index of the "Answer ALS Official Sign Date" column
-        index_of_als_date = columns.index('Answer ALS Official Sign Date')
-
-        # Remove 'Last Collaborator Signature' from its current position and insert it before 'Answer ALS Official Sign Date'
-        columns.remove('Last Collaborator Signature')
-        columns.insert(index_of_als_date, 'Last Collaborator Signature')
-
-        # Reorder the DataFrame with the new column order
-        merged_df = merged_df[columns]
-
-        # Now you can display the DataFrame to verify the new order
+        # Display the DataFrame
         st.write(merged_df)
+
+show()
