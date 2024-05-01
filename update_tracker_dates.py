@@ -67,7 +67,7 @@ def show():
 
         df_id = df[['ID', 'Email']]
 
-        users_df = users_df[['Email', 'Verified Date', 'User Sign Date', 'Auth. Business Official Sign Date', 'Answer ALS Official Sign Date', 'Collaborators']]
+        users_df = users_df[['Email', 'ID' 'Verified Date', 'User Sign Date', 'Auth. Business Official Sign Date', 'Answer ALS Official Sign Date', 'Collaborators']]
         
         # Rename the 'Id' column to 'ID' in the users_df DataFrame
         users_df.rename(columns={'Id': 'ID'}, inplace=True)
