@@ -52,6 +52,8 @@ def show():
             'Final User to Foundation': 'rgb(58, 149, 136)'
         }
         fig = ff.create_gantt(tasks, colors=colors, index_col='Resource', show_colorbar=True, group_tasks=True)
+        # Update layout to hide y-axis labels
+        fig.update_layout(yaxis=dict(showticklabels=False))
         return fig
 
     # File uploader for the data file in Excel format
