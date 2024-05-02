@@ -12,6 +12,52 @@ def show():
         if pd.isna(finish):
             finish = start
         return finish if finish > start else start + timedelta(hours=1)  # Adding 1 hour for visibility
+    
+    # Custom function to display a static legend
+    def display_custom_legend():
+        legend_html = """
+        <style>
+            .legend-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 20px;
+                width: 100%;
+            }
+            .legend-item {
+                display: flex;
+                align-items: center;
+                margin-right: 20px; /* Space between items */
+            }
+            .legend-box {
+                width: 20px;
+                height: 20px;
+                margin-right: 5px; /* Space between box and label */
+            }
+            .legend-label {
+                font-size: 16px;
+            }
+        </style>
+        <div class="legend-container">
+            <div class="legend-item">
+                <div class="legend-box" style="background-color: rgb(46, 137, 205);"></div>
+                <span class="legend-label">Req to Tracker</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background-color: rgb(114, 44, 121);"></div>
+                <span class="legend-label">Tracker to DS</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background-color: rgb(198, 47, 105);"></div>
+                <span class="legend-label">DS to Final User Sign</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background-color: rgb(58, 149, 136);"></div>
+                <span class="legend-label">Final User to Foundation</span>
+            </div>
+        </div>
+        """
+        st.markdown(legend_html, unsafe_allow_html=True)
 
     # Function to prepare tasks for the Gantt chart
     def prepare_gantt_chart_data(df):
@@ -44,7 +90,7 @@ def show():
 
         return tasks
 
-    # Function to create the Gantt chart
+    # Function to create the Gantt chart without internal legend
     def create_gantt_chart(tasks):
         colors = {
             'Req to Tracker': 'rgb(46, 137, 205)',
@@ -52,9 +98,8 @@ def show():
             'DS to Final User Sign': 'rgb(198, 47, 105)',
             'Final User to Foundation': 'rgb(58, 149, 136)'
         }
-        fig = ff.create_gantt(tasks, colors=colors, index_col='Resource', show_colorbar=True, group_tasks=True)
-        # Update layout to hide y-axis labels
-        fig.update_layout(yaxis=dict(showticklabels=False))
+        fig = ff.create_gantt(tasks, colors=colors, index_col='Resource', show_colorbar=False, group_tasks=True)
+        fig.update_layout(showlegend=False, yaxis=dict(showticklabels=False))
         return fig
     
     def calculate_durations(df):
@@ -83,24 +128,14 @@ def show():
         }
         return average_durations
     
+    # Function to display pie chart without internal legend
     def display_pie_chart(durations):
         labels = list(durations.keys())
         values = list(durations.values())
-
-        # Define colors corresponding to the Gantt chart phases
-        colors = ['rgb(46, 137, 205)',  # Req to Tracker
-                'rgb(114, 44, 121)',  # Tracker to DS
-                'rgb(198, 47, 105)',  # DS to Final User Sign
-                'rgb(58, 149, 136)']  # Final User to Foundation
-
-        # Creating the pie chart with custom colors
+        colors = ['rgb(46, 137, 205)', 'rgb(114, 44, 121)', 'rgb(198, 47, 105)', 'rgb(58, 149, 136)']
         fig = px.pie(names=labels, values=values, title="Total Days Spent in Each Phase", hole=0.3)
         fig.update_traces(textinfo='label+value', marker=dict(colors=colors))
-        fig.update_layout(
-            autosize=False,
-            width=1250,  # You can adjust this width according to your layout needs
-            height=750   # You can adjust this height according to your layout needs
-        )
+        fig.update_layout(showlegend=False, autosize=False, width=1250, height=750)
         st.plotly_chart(fig, use_container_width=True)
         
     def display_colored_metrics(durations, label_prefix):
@@ -166,19 +201,17 @@ def show():
         st.markdown(metric_html.format(metrics=metrics), unsafe_allow_html=True)
 
 
-    # File uploader for the data file in Excel format
+    # File uploader and chart logic
     data_file = st.file_uploader("Upload your data file in Excel format:", type=["xlsx"])
     if data_file is not None:
-        if data_file is not None:
-            df = pd.read_excel(data_file)  # Reading the Excel file
-            tasks = prepare_gantt_chart_data(df)
-            gantt_chart_fig = create_gantt_chart(tasks)
-            st.plotly_chart(gantt_chart_fig, use_container_width=True)
-            
-            # Calculate and display total durations
-            total_durations = calculate_durations(df)
-            display_pie_chart(total_durations)  # This line calls the pie chart display function with the total durations
+        df = pd.read_excel(data_file)
+        tasks = prepare_gantt_chart_data(df)
+        gantt_chart_fig = create_gantt_chart(tasks)
+        display_custom_legend()  # Display custom legend
+        st.plotly_chart(gantt_chart_fig, use_container_width=True)
 
-            # Calculate and display average durations
-            average_durations = calculate_average_durations(df)
-            display_colored_metrics(average_durations, "Avg Days")
+        total_durations = calculate_durations(df)
+        display_pie_chart(total_durations)
+
+        average_durations = calculate_average_durations(df)
+        display_colored_metrics(average_durations, "Avg Days")
