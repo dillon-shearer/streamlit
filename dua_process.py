@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import plotly.figure_factory as ff
+import plotly.express as px
 from datetime import timedelta
 
 def show():
@@ -81,68 +82,26 @@ def show():
             'Final User to Foundation': df['Final User to Foundation Duration'].mean()
         }
         return average_durations
+    
+    def display_pie_chart(durations):
+        labels = list(durations.keys())
+        values = list(durations.values())
 
-    def display_average_metrics(average_durations):
-        # Displaying average metrics
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Average Req to Tracker Days", f"{average_durations['Average Req to Tracker']:.1f}")
-        col2.metric("Average Tracker to DS Days", f"{average_durations['Average Tracker to DS']:.1f}")
-        col3.metric("Average DS to Final User Days", f"{average_durations['Average DS to Final User Sign']:.1f}")
-        col4.metric("Average Final User to Foundation Days", f"{average_durations['Average Final User to Foundation']:.1f}")
+        # Define colors corresponding to the Gantt chart phases
+        colors = ['rgb(46, 137, 205)',  # Req to Tracker
+                'rgb(114, 44, 121)',  # Tracker to DS
+                'rgb(198, 47, 105)',  # DS to Final User Sign
+                'rgb(58, 149, 136)']  # Final User to Foundation
 
-    def display_metrics(durations_summary):
-        # Displaying metrics using Streamlit columns
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Req to Tracker Total Days", durations_summary['Total Req to Tracker'])
-        col2.metric("Tracker to DS Total Days", durations_summary['Total Tracker to DS'])
-        col3.metric("DS to Final User Total Days", durations_summary['Total DS to Final User Sign'])
-        col4.metric("Final User to Foundation Total Days", durations_summary['Total Final User to Foundation'])
-        
-    # def display_colored_metrics(durations, label_prefix):
-    #     # Define a HTML template for colored metrics
-    #     metric_html = """
-    #     <style>
-    #         .metric-box {{
-    #             text-align: center;
-    #             padding: 20px;
-    #             border-radius: 0;
-    #             color: white;
-    #             background-color: {color};
-    #             width: 390px;  /* Adjusted width */
-    #             height: 190px; /* Adjusted height */
-    #             display: inline-block;
-    #             margin: 4px;
-    #         }}
-    #         @media (max-width: 1200px) {{
-    #             .metric-box {{
-    #                 width: 230px;  /* Smaller width for smaller screens */
-    #                 height: 110px; /* Smaller height for smaller screens */
-    #             }}
-    #         }}
-    #     </style>
-    #     <div class="metric-box" style='background-color: {color};'>
-    #         <h2 style='margin: 2px 0;'>{value:.1f}</h2>
-    #         <h4 style='margin: 0;'>{label}</h4>
-    #     </div>
-    #     """
-
-    #     # Colors for each phase
-    #     colors = {
-    #         'Req to Tracker': 'rgb(46, 137, 205)',
-    #         'Tracker to DS': 'rgb(114, 44, 121)',
-    #         'DS to Final User Sign': 'rgb(198, 47, 105)',
-    #         'Final User to Foundation': 'rgb(58, 149, 136)'
-    #     }
-
-    #     # Displaying colored metrics in a single row
-    #     metrics_html = (
-    #         metric_html.format(color=colors['Req to Tracker'], value=durations['Req to Tracker'], label="Req to Tracker " + label_prefix) +
-    #         metric_html.format(color=colors['Tracker to DS'], value=durations['Tracker to DS'], label="Tracker to DS " + label_prefix) +
-    #         metric_html.format(color=colors['DS to Final User Sign'], value=durations['DS to Final User Sign'], label="DS to Final User Sign " + label_prefix) +
-    #         metric_html.format(color=colors['Final User to Foundation'], value=durations['Final User to Foundation'], label="Final User to Foundation " + label_prefix)
-    #     )
-        
-    #     st.markdown(metrics_html, unsafe_allow_html=True)
+        # Creating the pie chart with custom colors
+        fig = px.pie(names=labels, values=values, title="Total Days Spent in Each Phase", hole=0.3)
+        fig.update_traces(textinfo='label+value', marker=dict(colors=colors))
+        fig.update_layout(
+            autosize=False,
+            width=1250,  # You can adjust this width according to your layout needs
+            height=750   # You can adjust this height according to your layout needs
+        )
+        st.plotly_chart(fig, use_container_width=True)
         
     def display_colored_metrics(durations, label_prefix):
         # Define CSS styles and container layout
@@ -207,7 +166,6 @@ def show():
         st.markdown(metric_html.format(metrics=metrics), unsafe_allow_html=True)
 
 
-
     # File uploader for the data file in Excel format
     data_file = st.file_uploader("Upload your data file in Excel format:", type=["xlsx"])
     if data_file is not None:
@@ -219,7 +177,7 @@ def show():
             
             # Calculate and display total durations
             total_durations = calculate_durations(df)
-            display_colored_metrics(total_durations, "Total Days")
+            display_pie_chart(total_durations)  # This line calls the pie chart display function with the total durations
 
             # Calculate and display average durations
             average_durations = calculate_average_durations(df)
