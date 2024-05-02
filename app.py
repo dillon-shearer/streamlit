@@ -4,6 +4,7 @@ import email_generator
 import staging_released_script
 import dua_tracker
 import update_tracker_dates
+import dua_process
 
 # Set page configuration
 st.set_page_config(
@@ -46,7 +47,7 @@ st.markdown("""
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-choice = st.sidebar.radio("Go to", ["Home", "Email Generator", "Get Azure Staging/Released", "DUA Tracker Script", "Tracker Date Update"])
+choice = st.sidebar.radio("Go to", ["Home", "Email Generator", "Get Azure Staging/Released", "DUA Tracker Script", "Tracker Date Update", "DUA Time Visuals"])
 
 # Footer or additional information
 st.sidebar.markdown("---")
@@ -64,3 +65,5 @@ if __name__ == "__main__":
         dua_tracker.show()
     elif choice == "Tracker Date Update":
         update_tracker_dates.show()
+    elif choice == "DUA Time Visuals":
+        dua_process.show()
