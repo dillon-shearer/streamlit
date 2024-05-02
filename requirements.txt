@@ -3,3 +3,4 @@ pandas
 openpyxl
 azure-storage-blob==12.15.0
 xlsxwriter
+plotly
