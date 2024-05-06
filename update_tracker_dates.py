@@ -20,7 +20,7 @@ def show():
     # Function to merge data from Users.csv based on ID
     def merge_data(users_df, id_column):
         # Select the required columns from Users.csv
-        columns_to_select = ['ID', 'Verified Date', 'User Sign Date', 'Auth. Business Official Sign Date', 'Answer ALS Official Sign Date']
+        columns_to_select = ['ID', 'Verified Date', 'User Sign Date', 'Auth. Business Official Sign Date','Collaborators', 'Answer ALS Official Sign Date']
         selected_data = users_df[columns_to_select]
         # Merge based on the ID column
         merged_data = pd.merge(id_column, selected_data, on='ID', how='left')
@@ -32,6 +32,23 @@ def show():
         for column in date_columns:
             df[column] = pd.to_datetime(df[column]).dt.strftime('%Y-%m-%d')
         return df
+    
+    # Function to extract the most recent date
+    def extract_recent_date(cell):
+        if pd.isna(cell):
+            return "No collaborators"
+        entries = cell.split(';')
+        sign_dates = []
+        for entry in entries:
+            if "Sign Status: Sent" in entry:
+                return np.nan
+            if "Sign Date:" in entry:
+                sign_date = entry.split(': ')[1].strip()
+                sign_dates.append(pd.to_datetime(sign_date))
+        if sign_dates:
+            return max(sign_dates).strftime('%Y-%m-%d')
+        else:
+            return np.nan
 
     # File upload for Users.csv
     users_csv_file = st.file_uploader("Upload Users.csv", type=["csv"])
@@ -55,10 +72,14 @@ def show():
         # Apply function to format date columns
         merged_df = format_dates(merged_df)
 
-        # Drop the 'ID' column from merged_df
-        merged_df.drop(columns=['ID'], inplace=True)
+        # Apply the function to extract the most recent date
+        merged_df['Last Collaborator Sign Date'] = merged_df['Collaborators'].apply(extract_recent_date)
+
+        # Drop the 'ID'/collaborators column from merged_df
+        merged_df.drop(columns=['ID', 'Collaborators'], inplace=True)
+
+        # Reorder columns to move 'Answer ALS Official Sign Date' to the end
+        merged_df = merged_df[[col for col in merged_df if col != 'Answer ALS Official Sign Date'] + ['Answer ALS Official Sign Date']]
 
         # Display the DataFrame
         st.write(merged_df)
-
-show()
