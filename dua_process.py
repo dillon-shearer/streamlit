@@ -213,6 +213,21 @@ def show():
         st.plotly_chart(fig, use_container_width=True)
 
     # File uploader and chart logic
+    # Define the information to be displayed
+    phases = {
+        "Added to Tracker": "Date Added to Tracker - Date Requested",
+        "Data Verification": "Data Verified Date - Date Added to Tracker",
+        "Verified to DAC Send": "DAC Send Date - Data Verified Date",
+        "DAC Turn-Around": "DAC Approval Date - DAC Send Date",
+        "Send DocuSign": "DS Send Date - DAC Approval Date",
+        "User DocuSign": "Last Sign (between requester, BO, Collabs) - DS Send Date",
+        "Foundation Signature": "Foundation Signature - Last Sign (between requester, BO, Collabs)"
+    }
+
+    # Display the information under an accordion
+    with st.expander("**Phases Information**"):
+        for phase, description in phases.items():
+            st.write(f"**{phase}**: {description}")
     data_file = st.file_uploader("Upload your data file in Excel format:", type=["xlsx"])
     if data_file is not None:
         df = pd.read_excel(data_file)
